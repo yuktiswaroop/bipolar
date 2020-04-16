@@ -39,36 +39,48 @@ def book_detail(request, pk):
 def userbookdetail(request):   
    
     if request.method == 'GET':
-    	book = Book.objects.filter(reader=request.user)
-    	serializer = BookSerializer(book, many=True)
-    	return Response(serializer.data)  
+        book = Book.objects.filter(reader=request.user)
+        serializer = BookSerializer(book, many=True)
+        return Response(serializer.data)  
 
 @api_view(['DELETE'])
 @permission_classes((IsAuthenticated, ))
 def userbookdelete(request,id):
-	#id=request.data.id
-	book = Book.objects.get(reader=request.user, id=id)
-	book.delete()
-	return Response({"message":"ok"})
+    #id=request.data.id
+    book = Book.objects.get(reader=request.user, id=id)
+    book.delete()
+    return Response({"message":"ok"})
 
 
 @api_view(['PUT'])
 @permission_classes((IsAuthenticated, ))
 def userbookupdate(request,id):
-	book = Book.objects.get(reader=request.user, id=id)
-	book.title = request.data.title
-	book.amazon_url = request.data.amazon_url
-	book.genre = request.data.genre
-	book.author = request.data.author
-	book.save()
-	serializer = BookSerializer(book)
-	return Response(serializer.data)
+    book = Book.objects.get(reader=request.user, id=id)
+    book.title = request.data['title']
+    book.amazon_url = request.data['amazon_url']
+    book.genre = request.data['genre']
+    book.author = request.data['author']    
+    book.save()
+    serializer = BookSerializer(book)
+    return Response(serializer.data)
 
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 def userbookcreate(request):
-	params=request.data
-	book=Book.objects.create(reader=request.user,title = params.title, amazon_url = params.amazon_url, genre=params.genre, author = params.author).save()
-	serializer = BookSerializer(book, many=True)
-	return Response(serializer.data)  
+    params=request.data
+    #print("\n HELLOOOOO: %s \n",params)
+    book=Book.objects.create(reader=request.user)
+    book.title = request.data['title'] 
+    book.amazon_url = request.data['amazon_url'] 
+    book.genre=request.data['genre'] 
+    book.author = request.data['author']
+    book.save()
+    serializer = BookSerializer(book)
+    return Response(serializer.data)  
 
+#request.data is a QueryDict object
+# <QueryDict: {
+# 'title': ['ABCDEF'],
+# 'amazon_url': ['https://www.amazon.in/'],
+# 'author': ['yukti'], 
+# 'genre': ['Romcom']}>
