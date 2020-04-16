@@ -27,7 +27,7 @@ urlpatterns = [
 
     path('userbookdetail/', views.userbookdetail),
     path('userbookcreate/', views.userbookcreate),
-    path('userbookupdate/<int:id>', views.userbookupdate),    
-    path('userbookdelete/<int:id>', views.userbookdelete),
+    path('userbookupdate/<int:id>/', views.userbookupdate),    
+    path('userbookdelete/<int:id>/', views.userbookdelete),
     
 ]
